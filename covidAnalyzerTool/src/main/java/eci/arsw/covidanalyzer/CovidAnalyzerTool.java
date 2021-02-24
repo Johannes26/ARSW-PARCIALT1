@@ -23,11 +23,13 @@ public class CovidAnalyzerTool {
 	private int amountOfFilesTotal;
 	public AtomicInteger amountOfFilesProcessed;
 	private final int amountOfThreads = 5;
+	private List<ProcessDataThread> threads;
 
 	public CovidAnalyzerTool() {
 		resultAnalyzer = new ResultAnalyzer();
 		testReader = new TestReader();
 		amountOfFilesProcessed = new AtomicInteger();
+		threads = new ArrayList<ProcessDataThread>();
 	}
 
 	public void processResultData() {
@@ -44,6 +46,7 @@ public class CovidAnalyzerTool {
 			}
 			ProcessDataThread t = new ProcessDataThread(limiteinf, limitesup, this, resultFiles);
 			t.start();
+			threads.add(t);
 		}
 	}
 
@@ -74,6 +77,11 @@ public class CovidAnalyzerTool {
 			String line = scanner.nextLine();
 			if (line.contains("exit"))
 				break;
+			if(line.equals("")) {
+				for(ProcessDataThread p : covidAnalyzerTool.threads) {
+					p.cambiarPausado();
+				}
+			}
 			String message = "Processed %d out of %d files.\nFound %d positive people:\n%s";
 			Set<Result> positivePeople = covidAnalyzerTool.getPositivePeople();
 			String affectedPeople = positivePeople.stream().map(Result::toString).reduce("",

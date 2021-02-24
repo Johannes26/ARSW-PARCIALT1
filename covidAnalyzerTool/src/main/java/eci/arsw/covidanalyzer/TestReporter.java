@@ -39,14 +39,14 @@ public class TestReporter {
                 break;
         }
 
-        try {
+        /*try {
             String jsonString = mapper.writeValueAsString(result);
             Unirest.post(SERVER_URL + complement)
                     .body(jsonString)
                     .asString();
         } catch (JsonProcessingException | UnirestException e) {
             Logger.getLogger(TestReporter.class.getName()).log(Level.SEVERE, "Unable to report covid test result", e);
-        }
+        }*/
     }
 
 }
